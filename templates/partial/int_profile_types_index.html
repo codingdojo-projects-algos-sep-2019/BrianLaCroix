@@ -1,0 +1,30 @@
+<div class='col-4'>
+    <div class='row p-2'>
+        <h6>New Interface Profile Type:</h6>
+        <form id="new_device_type" method="POST">
+            <input name='profile_type' placeholder="Profile Name">
+            <input name='description' placeholder="Description"> 
+            <button class='form_button' data-url='/int_profile_type/add' type='button'>Add</button>
+        </form>
+    </div>
+</div>
+<div class='col-8'>
+    <table class='table'>
+        <thead>
+            <th>Profile Name</th>
+            <th>Description</th>
+        </thead>
+        <tbody>
+            {% for int_profile_type in int_profile_types %}
+            <tr>
+                <td>{{int_profile_type.profile_type}}</td>
+                <td>{{int_profile_type.description}}</td>
+                <td>
+                    <button class="action_button" data-url='/int_profile_type/delete/{{int_profile_type.id}}' type='button'>Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </ul>    
+</div>

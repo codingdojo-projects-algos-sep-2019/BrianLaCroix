@@ -1,0 +1,37 @@
+<div class='col-4'>
+    <div class='row p-2'>
+        <h6>New Router:</h6>
+        <form id='new_device_type' method="POST">
+            <input name='name' placeholder="Router name here">
+            <select class='form_control' function='index' name='router_type_id'>
+                <option value=''>Select device type</option>
+                {% for rtr_type in rtr_types %}
+                <option value='{{rtr_type.id}}'>{{rtr_type.model}}</option>
+                {% endfor %}
+            </select>
+            <button class='form_button' data-url='/router/add' type='button'>Add</button>
+        </form>
+    </div>
+</div>
+<div class='col-8'>
+    <table class='table'>
+        <thead>
+            <th>Router Name</th>
+            <th>Router Type</th>
+            <th>Options</th>
+        </thead>
+        <tbody>
+            {% for router in routers %}
+            <tr>
+                <td>{{router.name}}</td>
+                <td>{{router.router_type.model}}</td>
+                <td>
+                    <button class="action_button" data-url='/router/edit/{{router.id}}' type='button'>Edit</button>
+                    <button class="action_button" data-url='/router/delete/{{router.id}}' type='button'>Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </ul>    
+</div>

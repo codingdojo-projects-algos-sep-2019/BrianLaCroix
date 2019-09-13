@@ -1,0 +1,29 @@
+This program is designed to model routers - not to track assets (and therefore, does not manage serial numbers).  
+While real routers have sub-cards, interfaces that can be channelized, etc - this program is really designed as just a
+proof of concept of the raw building blocks of a router, then to create a logical router and plug those elements into
+that logical model.  The raw elements are as follows:
+
+    1.  Router Types (e.g. models of chassis)
+    2.  Linecard Types  (in this case, just monolithic cards, no daughter cards)
+    3.  Interface Types
+    4.  Interface Profiles (e.g. backbone, transit, peering, etc)
+
+Once these elements are populated into the databse, they would be able to crate "routers", assign different types of
+building blocks to that logical router, then assign attributes (ip addresses, comments, etc) to them.  A full fledged
+router modelling tool would need parent/child relationships for linecard types and interface types to be able to 
+properly model all hardware.  That is not the intended purpose of this application.
+
+
+
+To install/run this app locally:
+
+1.  Install python3
+2.  Clone this directory to your local machine
+3.  "pip install -r requiements.txt" into a virtualenv
+4.  Initialize the database:
+    - flask db init 
+    - flask db migrate
+    - flask db upgrade
+5.  run the app: python3 app.py
+6.  Open a browser to http://localhost:5000
+

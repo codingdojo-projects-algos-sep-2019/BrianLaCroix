@@ -1,0 +1,30 @@
+<div class='col-4'>
+    <div class='row p-2'>
+        <h6>New Router Type:</h6>
+        <form id="new_device_type" method="POST">
+            <input name='model' placeholder="Router model">
+            <input name='num_slots' placeholder="Number of slots"> 
+            <button class='form_button' data-url='/router_type/add' type='button'>Add</button>
+        </form>
+    </div>
+</div>
+<div class='col-8'>
+    <table class='table'>
+        <thead>
+            <th>Router Model</th>
+            <th>Linecard Slots</th>
+        </thead>
+        <tbody>
+            {% for router_type in router_types %}
+            <tr>
+                <td>{{router_type.model}}</td>
+                <td>{{router_type.num_slots}}</td>
+                <td>
+                    <button class="action_button" data-url='/router_type/delete/{{router_type.id}}' type='button'>Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </ul>    
+</div>

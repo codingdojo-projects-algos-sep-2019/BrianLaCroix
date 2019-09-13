@@ -1,0 +1,85 @@
+<form id='new_device_type' class="w-100" method="POST">
+    <div class = "row">
+        <h4 class= "text-centered">Edit Router: {{router.name}}</h4>
+    </div>
+    <div class = "row">
+        <input name='router_name' value="{{router.name}}">
+        <select class='form_control' function='index' name='router_type_id'>
+            {% for rtr_type in rtr_types %}
+            <option {% if rtr_type.id == router.router_type.id %}selected {% endif %}value='{{rtr_type.id}}'>{{rtr_type.model}}</option>
+            {% endfor %}
+        </select>
+        <button class='form_button' data-url='/router/update/{{router.id}}' type='button'>Update</button> 
+    </div>
+    <div class = "row">
+        <table class='table table-hover'>
+            <thead>
+                <th>SLOT</th>
+                <th>Linecard Type</th>
+                <th>Functions</th>
+                <th>Int#</th>
+                <th>Interface Type</th>
+                <th>Interface Profile</th>
+                <th>IPv4 Address</th>
+                <th>Comment</th>
+            </thead>
+            <tbody>
+                {% for i in range(router.router_type.num_slots) %}
+                <tr>
+                    <td rowspan={{current_linecards[i].num_ports}}>{{i}}</td>
+                    <td rowspan={{current_linecards[i].num_ports}}>
+                        <select class='form_control' name='slot_{{i}}'>
+                            <option value='None'>NONE</option>                        
+                            {% for linecard_type in linecard_types %}
+                            <option {% if linecard_type.id == current_linecards[i].linecard_type_id %}selected {% endif %}value='{{linecard_type.id}}'>{{linecard_type.model}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    {% if current_linecards[i].linecard_type_id is not defined %}
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    {% else %}
+                    <td rowspan={{current_linecards[i].num_ports}}>
+                        <button type='button' class='action_button' data-url='/linecards/edit/{{current_linecards[i].router_linecard_id}}'>Edit</button>
+                    </td>
+                    {% for port in range(current_linecards[i].num_ports) %}
+                    {% if port != 0 %}
+                    <tr>
+                    {% endif %}
+                        <td>{{port}}</td>
+                        <td>
+                            <select class='form_control' name='interface_type_{{i}}/{{port}}''>
+                            {% for interface_type in interface_types %}
+                                <option value="{{interface_type.id}}">{{interface_type.description}}</option>                      
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class='form_control' name='interface_profile_{{i}}/{{port}}'>
+                            {% for int_profile in int_profiles %}
+                                <option value="{{int_profile.id}}">{{int_profile.description}}</option>                      
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input name='interface_address_{{i}}/{{port}}' value="192.168.0.0/24">
+                        </td>
+                        <td>
+                            <input name='interface_comment_{{i}}/{{port}}' value="Comemnt blah blah">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %} 
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+        </table>
+        </ul>    
+    </div>
+</form>
+
+

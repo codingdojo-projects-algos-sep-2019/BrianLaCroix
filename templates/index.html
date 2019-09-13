@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Router Configurator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        // The following makes form data more easily referenced, requires input from .serializeArray() 
+        function convertToDict(arr) {
+            var newArray = {};
+            for (var i=0; i< arr.length; i++) {
+                newArray[arr[i]['name']] = arr[i]['value'];
+            }
+            return newArray
+        }
+        function callAjax(url,data) {
+            console.log('url =',url,'|| data =',data)
+            // skip if URL is blank
+            if (url.length > 0 ) {
+                $.ajax({
+                    method: "POST",   
+                    url: url,
+                    data: data
+                })
+                .done(function(res){
+                    $('#content').html(res)  
+                })
+            }
+        }
+        $(document).ready(function(){
+            // Generic dropdown menu event handler
+            $('.container').on('change','.modify_devices', function(){
+                url=$(this).find(':selected').data('url')
+                callAjax(url);
+            });
+            // Generic button event handler - expects "data-url field to contain URL for expected action.
+            $('.container').on('click','.action_button', function() {
+                url = $(this).attr('data-url');
+                callAjax(url);
+            });
+            // Generic FORM button event handler - expects "data-url field to contain URL for expected action.
+            $('.container').on('click','.form_button', function() {
+                url = $(this).attr('data-url');
+                data = convertToDict($('#new_device_type').serializeArray());
+                callAjax(url,data);
+            });
+            // Search window trigger on keyup
+            $('.container').on('keyup','#search',function() {
+                data = convertToDict($('#search').serializeArray())
+                url = "/routers/search"
+                console.log("Keyup event!!!",data)
+                callAjax(url,data);
+            })
+            // General catch-all to kill ENTER button from form (required due to AJAX dynamic content creation)
+            $(".container").on('keypress','form',function(e) {
+                //Enter key
+                if (e.which == 13) {
+                    return false;
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class='container'>
+        <div class='row p-1 border-bottom justify-content-center'>
+            <h3>Welcome to the backbone router configurator!</h3>
+        </div>
+        <div class='row p-1 border-bottom'>
+            <div class='col-4'>
+                <div class='row'>
+                    <h6>Modify Types</h6>
+                </div>
+                <div class='row'>
+                    <form class='form' method='POST'>
+                        <select class='modify_devices' function='index' name='url'>
+                            <option data-url=''>Select device type</option>
+                            <option data-url='/router_types/index'>Router</option>
+                            <option data-url='/linecard_types/index'>Linecard</option>
+                            <option data-url='/interface_types/index'>Interface</option>
+                            <option data-url='/int_profile_types/index'>Interface Profile</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class='col-4'>
+                <div class='row'>
+                    <h6>Modify Routers</h6>
+                </div>
+                <div class='row'>
+                    <form class='form' method='POST'>
+                        <select class='modify_devices' function='edit' name='url'>
+                            <option data-url=''>Select device...</option>
+                            {% for router in routers %}
+                                <option data-url='/router/edit/{{router.id}}'>{{router.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class='col-4'>
+                <h6>Search/Add Routers</h6>
+                <form id='search' method='POST'>
+                    <input name="search_data" placeholder="Enter router name here...">
+                </form>
+            </div>
+        </div>
+        <div class='row' id='content'></div> 
+    </div>
+</body>
+</html>
